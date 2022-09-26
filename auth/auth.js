@@ -14,8 +14,9 @@ const redirectUrl = params.get('redirectUrl') || '../';
 // > Part C: If user directly navigated to /auth, but we have a user, go back
 // (they need to sign out first before coming here)
 //      - get the user
+const user = getUser();
 //      - replace location with redirectUrl
-
+if (user) location.replace(redirectUrl);
 // Sign up options
 const signUpType = {
     header: 'Create a new account',
@@ -71,8 +72,10 @@ authForm.addEventListener('submit', async (e) => {
 
     // > Part A:
     //      - get formData object from form
+    const formData = new FormData(authForm);
     //      - call "authType.action" passing in the email and password from
     //        the form data and assign to response variable
+    const response = await authType.action(formData.get('email'), formData.get('password'));
 
     const error = response.error;
 
@@ -84,5 +87,6 @@ authForm.addEventListener('submit', async (e) => {
     } else {
         // go back to wherever user came from
         // > Part A using "location", replace url with "redirectUrl"
+        location.replace(redirectUrl);
     }
 });
